@@ -12,7 +12,10 @@ use alloc::{
     vec::Vec,
 };
 use bevy_platform::collections::HashSet;
-use core::{hash::BuildHasher, mem};
+use core::{
+    hash::{BuildHasher, Hash},
+    mem,
+};
 use smallvec::SmallVec;
 
 use super::EntityIndexSet;
@@ -73,9 +76,7 @@ impl<T: MapEntities> MapEntities for Option<T> {
     }
 }
 
-impl<T: MapEntities + Eq + core::hash::Hash, S: BuildHasher + Default> MapEntities
-    for HashSet<T, S>
-{
+impl<T: MapEntities + Eq + Hash, S: BuildHasher + Default> MapEntities for HashSet<T, S> {
     fn map_entities<E: EntityMapper>(&mut self, entity_mapper: &mut E) {
         *self = self
             .drain()
@@ -87,9 +88,7 @@ impl<T: MapEntities + Eq + core::hash::Hash, S: BuildHasher + Default> MapEntiti
     }
 }
 
-impl<T: MapEntities + Eq + core::hash::Hash, S: BuildHasher + Default> MapEntities
-    for IndexSet<T, S>
-{
+impl<T: MapEntities + Eq + Hash, S: BuildHasher + Default> MapEntities for IndexSet<T, S> {
     fn map_entities<E: EntityMapper>(&mut self, entity_mapper: &mut E) {
         *self = self
             .drain(..)
